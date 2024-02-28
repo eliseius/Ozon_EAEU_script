@@ -1,33 +1,14 @@
-from collections import Counter
+from datetime import datetime as dt
 
 from constants import FOREIGN_COUNTRIES_SHIPMENT
 
 
-def make_short_report(sales_report):
-    all_item_sold = sales_report['result']['postings']
-    short_report = []
-    for one_item_sold in all_item_sold:
-        inform_every_item_sold = {
-            'posting_number': one_item_sold['posting_number'],
-            'shipment_date': one_item_sold['shipment_date'],
-            'price': float(one_item_sold['products'][0]['price']),
-            'name': one_item_sold['products'][0]['name'],
-            'quantity': one_item_sold['products'][0]['quantity'],
-            'region_delivery': one_item_sold['analytics_data']['region'],
-            'city_delivery': one_item_sold['analytics_data']['city'],
-            'cluster_delivery': one_item_sold['financial_data']['cluster_to'],
-        }
-        short_report.append(inform_every_item_sold)
-    return short_report
-
-
-def get_report_on_shipments_to_countries(report):
-    report_with_filter = filter_report_by_foreign_countries(report)
-    # При слиянии отчетов FBO и FBS, тут нужно отсортировать по дате
-    number_shipments_to_countries = get_number_shipments_to_countries(report_with_filter)
-    sorted_report = get_sorted_report(report_with_filter, number_shipments_to_countries)
-
-    return sorted_report, number_shipments_to_countries
+def filter_report(report):
+    report_with_foreign_countries = filter_report_by_foreign_countries(report)
+    report_with_universal_date = change_format_date(report_with_foreign_countries)
+    dates_list = get_list_dates(report_with_universal_date)
+    sorted_report_by_date = get_sorted_report_by_date(report_with_universal_date, dates_list)
+    return sorted_report_by_date
 
 
 def filter_report_by_foreign_countries(report):
@@ -46,23 +27,6 @@ def filter_report_by_foreign_countries(report):
     return report_with_filter
 
 
-def get_number_shipments_to_countries(report):
-    clusters_delivery = []
-    for position in report:
-        clusters_delivery.append(position['country_delivery'])
-    number_shipment_to_countries = Counter(clusters_delivery).most_common()
-    return number_shipment_to_countries
-
-
-def get_sorted_report(report, number_shipments_to_countries):
-    sorted_report = []
-    for element in number_shipments_to_countries:
-        for item in report:
-            if element[0] in item['country_delivery']:
-                sorted_report.append(item)
-    return sorted_report
-
-
 def get_destination(region, city, item_sold):
     if city:
         return item_sold['city_delivery']
@@ -70,5 +34,28 @@ def get_destination(region, city, item_sold):
         return item_sold['region_delivery']
     return item_sold['cluster_delivery']
 
-def get_Locality_buyer():
-    pass
+
+def change_format_date(report):
+    for item in report:
+        str_date_raw = item['shipment_date'].split(sep='T')
+        date = dt.strptime(str_date_raw[0], '%Y-%m-%d').date()
+        item['shipment_date'] = date
+    return report
+
+
+def get_list_dates(report):
+    dates = set()
+    for item in report:
+        dates.add(item['shipment_date'])
+    dates_list = list(dates).sort()
+    return dates_list
+
+
+def get_sorted_report_by_date(report, dates_list):
+    sorted_report = []
+    for date in dates_list:
+        for item in report:
+            if date in item['shipment_date']:
+                item['shipment_date'] = dt.strftime(item['shipment_date'], '%Y-%m-%d')
+                sorted_report.append(item)
+    return sorted_report

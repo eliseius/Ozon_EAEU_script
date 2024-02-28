@@ -1,11 +1,11 @@
 import constants
 import os
 
-from telegram import ParseMode, ReplyKeyboardRemove
+from telegram import ReplyKeyboardRemove
 from telegram.ext import ConversationHandler
 
-from raw_data import get_sales_data
-from utils import compose_keyboard, output_error, output_report, parse_date, render_statuses
+from sales_data import get_sales_data
+from utils import compose_keyboard, output_error, output_report, parse_date
 
 
 def get_report_start(update, context):
@@ -39,21 +39,11 @@ def get_report_date_end(update, context):
         update.message.reply_text('Дата конца периода не может быть раньше даты начала')
         return 'period_end'
     context.user_data['report']['period_end'] = date_end
-    update.message.reply_text('Введите статус заказов')
-    update.message.reply_text(f'Доступные статусы:\n\n{render_statuses()}', parse_mode = ParseMode.HTML)
-    return 'status'
-
-
-def get_report_status(update, context):
-    order_status = update.message.text
-    if order_status not in constants.STATUS_CATALOGUE:
-        update.message.reply_text('Введите корректный статус заказов')
-        return 'status'
     update.message.reply_text('Отчёт формируется...')
+    
     report_output, sum_post_in_city = get_sales_data(
         date_start=context.user_data['report']['period_start'],
         date_finish=context.user_data['report']['period_end'],
-        status=order_status,
     )
     check_report(report_output, sum_post_in_city, update)
     update.message.reply_text(

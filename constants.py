@@ -4,6 +4,8 @@ URL_OZON_FBO = "https://api-seller.ozon.ru/v2/posting/fbo/list"
 
 LIMIT = 1000
 
+OFFSET = 0
+
 DATEPARSER_SETTINGS = {'DATE_ORDER': 'YMD'}
 
 FOREIGN_COUNTRIES_SHIPMENT = {
@@ -31,15 +33,6 @@ STATUS_CATALOGUE = {
     'sent_by_seller': 'Отправлено продавцом',
 }
 
-LIST_ERROR_OZON = {
-    400: 'Неверный параметр. Обратитесь в службу поддержки бота.',#Возникает, если не правильно переданы limit, offset, status, дата
-    403: 'Доступ запрещен. Неправильные Client-Id или Api-Key.',
-    404: 'Ответ не найден. Обратитесь в службу поддержки бота.', #Неправильное или неполное наименование метода.
-    409: 'Конфликт запроса',
-    500: 'Внутренняя ошибка сервиса. Попробуйте сделать запрос позже.',
-    700: 'Ошибка сформированных данных отчета. Обратитесь в службу поддержки бота.',
-}
-
 LIST_ERROR_CURRENCY = {
     101: 'Ошибка ключа доступа. Ведите корректый ключ.',
     102: 'Учетная запись пользователя не активна. Необходимо связаться со службой поддержки.',
@@ -59,4 +52,4 @@ LIST_ERROR_CURRENCY = {
 
 NAME_FILE_WITH_ERROR = 'error.txt'
 
-LOCATE_FILE_WITH_ERROR = f'C:\project\LP-Project-ozon\{NAME_FILE_WITH_ERROR}'
+LOCATE_FILE_WITH_ERROR = f'C:\project\Ozon_EAEU_script\{NAME_FILE_WITH_ERROR}'
