@@ -7,8 +7,6 @@ import time
 from datetime import datetime as dt
 from datetime import timedelta as td
 
-import db_currency.settings
-
 from db_currency.constantses import CURRENCY, URL_CURRENCY
 from db_currency.db import db_session
 from db_currency.models import Currency

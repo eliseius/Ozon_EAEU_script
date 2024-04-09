@@ -20,7 +20,7 @@ def main_bot():
         fallbacks = [MessageHandler(Filters.text | Filters.video | Filters.photo | Filters.document | Filters.location, get_report_incorrect)],#Переписать этот обработчик
     )
     dp.add_handler(report)
-    dp.add_handler(CommandHandler('start', start_bot))
+    dp.add_handler(CommandHandler('start', start_bot))# добавить команду начать заново
     dp.add_handler(MessageHandler(Filters.text, has_incorrect_input))
     enter_for_log('BOT STARTER', 'info')
     ozon_bot.start_polling()

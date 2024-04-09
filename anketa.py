@@ -18,9 +18,9 @@ def get_report_start(update, context):
 
 
 def get_report_date_start(update, context):
-    date_start = parse_date(update.message.text)
+    date_start = parse_date(update.message.text) # Дата должна соответствовать формату, это нужно проверять жестко
     if date_start is None:
-        update.message.reply_text('Введите корректную дату')
+        update.message.reply_text('Введите корректную дату начала периода')
         return 'period_start'
     context.user_data['report'] = {'period_start': date_start}
     update.message.reply_text(
@@ -33,10 +33,10 @@ def get_report_date_start(update, context):
 def get_report_date_end(update, context):
     date_end = parse_date(update.message.text)
     if date_end is None:
-        update.message.reply_text('Введите корректную дату')
+        update.message.reply_text('Введите корректную дату конца периода')
         return 'period_end'
     if date_end <= context.user_data['report']['period_start']:#Проверить ограничения по периоду за который можно запрашивать отчет
-        update.message.reply_text('Дата конца периода не может быть раньше даты начала')
+        update.message.reply_text('Дата конца периода не может быть раньше даты начала') #Нужно предложить заменить дату начала или начать все сначала
         return 'period_end'
     context.user_data['report']['period_end'] = date_end
     update.message.reply_text('Отчёт формируется...')
