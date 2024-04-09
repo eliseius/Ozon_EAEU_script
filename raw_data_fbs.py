@@ -1,3 +1,5 @@
+from  setting import CLIENT_ID, APY
+
 import json
 import os
 import requests
@@ -43,8 +45,10 @@ def make_short_report_fbs(sales_report):
 
 
 def get_raw_sales_data_fbs(datetime_start, datetime_finish, limit, offset):
-    headers = {'Client-Id': os.environ['OZON_CLIENT_ID'], 'Api-Key': os.environ['NEW_OZON_API_KEY'],
-               'Content-Type': 'application/json'}
+    # headers = {'Client-Id': os.environ['OZON_CLIENT_ID'], 'Api-Key': os.environ['NEW_OZON_API_KEY'],
+    #            'Content-Type': 'application/json'}
+
+    headers = {'Client-Id': CLIENT_ID, 'Api-Key': APY, 'Content-Type': 'application/json'}
 
     params = {
         'dir': 'asc',

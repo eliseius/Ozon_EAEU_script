@@ -171,3 +171,5 @@ TEST/
 TEST.py
 
 test_currency.py
+
+setting.py
