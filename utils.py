@@ -1,9 +1,10 @@
 import constants
 import dateparser
-import logging
 import os
 
 from telegram import ParseMode, ReplyKeyboardMarkup
+
+from log import enter_for_log
 
 
 def compose_keyboard():
@@ -13,28 +14,21 @@ def compose_keyboard():
 def parse_date(input_date):
     parsed_date = dateparser.parse(input_date, settings = constants.DATEPARSER_SETTINGS)
     return parsed_date
-    
-    
-def render_statuses():
-    status_list = []
-    status_items = constants.STATUS_CATALOGUE.items()
-    for status, value in status_items:
-        status_list.append(f'<b>{status}</b>  -  {value}')
-    return '\n'.join(status_list)
 
 
 def render_report(report_list):
     final_report = []
-    for order in report_list:
+    for item in report_list:
         final_report.append(
-            f'<b>Номер отправления:</b>  {order["posting_number"]}\n'
-            f'<b>Дата отгрузки:</b>  {order["shipment_date"]}\n'
-            f'<b>Цена в рублях:</b>  {order["price"]}р.\n'
-            f'<b>Цена в долларах:</b>  {order["price_USD"]}$\n'
-            f'<b>Наименование:</b>  {order["name"]}\n'
-            f'<b>Количество:</b>  {order["quantity"]}\n'
-            f'<b>Страна доставки:</b>  {order["country_delivery"]}\n'
-            f'<b>Место назначения:</b>  {order["destination"]}\n'
+            f'<b>Номер отправления:</b>  {item["posting_number"]}\n'
+            f'<b>Дата отгрузки:</b>  {item["shipment_date"]}\n'
+            f'<b>Цена в рублях:</b>  {item["price"]}р.\n'
+            f'<b>Цена в долларах:</b>  {item["price_USD"]}$\n'
+            f'<b>Наименование:</b>  {item["name"]}\n'
+            f'<b>Количество:</b>  {item["quantity"]}\n'
+            f'<b>Страна доставки:</b>  {item["country_delivery"]}\n'
+            f'<b>Место назначения:</b>  {item["destination"]}\n'
+            f'<b>Статус товара:</b>  {item["status"]}\n'
         )
     return '\n' .join(final_report)
 
@@ -66,10 +60,9 @@ def output_report(report, sum_post_in_city, update):
     update.message.reply_text(adapt_sum_post(sum_post_in_city))
 
 
-def save_error_ozon(code):
-    name_error = constants.LIST_ERROR_OZON[code]
-    text = f'Возникла ошибка OZON\n{code}: {name_error}'
-    error_log = f'Error OZON - {code}: {name_error}'
+def save_error_ozon(text):
+    text = f'Возникла ошибка OZON\n{text}'
+    error_log = f'Error OZON: {text}'
     write_error(text, error_log)
 
 
@@ -81,7 +74,7 @@ def save_error_currency(code):
 
 
 def write_error(name, error_log):
-    logging.error(error_log)
+    enter_for_log(error_log, 'error')
     with open(constants.NAME_FILE_WITH_ERROR, 'w', encoding='utf-8') as file:
         file.write(name)
 
