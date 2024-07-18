@@ -1,7 +1,7 @@
 import json
-import os
 import requests
 
+from config import OZON_API, OZON_CLIENT_ID
 from constants import LIMIT, URL_OZON_FBS
 from utils import save_error_ozon
 
@@ -43,8 +43,7 @@ def make_short_report_fbs(sales_report):
 
 
 def get_raw_sales_data_fbs(datetime_start, datetime_finish, limit, offset):
-    headers = {'Client-Id': os.environ['OZON_CLIENT_ID'], 'Api-Key': os.environ['NEW_OZON_API_KEY'],
-               'Content-Type': 'application/json'}
+    headers = {'Client-Id': OZON_CLIENT_ID, 'Api-Key': OZON_API, 'Content-Type': 'application/json'}
 
     params = {
         'dir': 'asc',

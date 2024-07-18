@@ -1,7 +1,7 @@
 from threading import Thread
 
 from bot import main_bot
-from update_db import start_update_dbase
+from update_db_currency import start_update_dbase
 
 
 update_db = Thread(target=start_update_dbase, daemon=True)

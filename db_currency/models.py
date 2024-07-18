@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, Date, Float
+
 from db_currency.db import Base, engine
 
 class Currency (Base):

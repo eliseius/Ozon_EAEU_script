@@ -1,5 +1,3 @@
-from datetime import datetime as dt
-
 from constants import FOREIGN_COUNTRIES_SHIPMENT
 
 
@@ -7,8 +5,10 @@ def filter_report(report):
     report_with_foreign_countries = filter_report_by_foreign_countries(report)
     report_with_universal_date = change_format_date(report_with_foreign_countries)
     dates_list = get_list_dates(report_with_universal_date)
-    sorted_report_by_date = get_sorted_report_by_date(report_with_universal_date, dates_list)
-    return sorted_report_by_date
+    if dates_list:
+        sorted_report_by_date = get_sorted_report_by_date(report_with_universal_date, dates_list)
+        return sorted_report_by_date
+    return None
 
 
 def filter_report_by_foreign_countries(report):
@@ -38,8 +38,7 @@ def get_destination(region, city, item_sold):
 def change_format_date(report):
     for item in report:
         str_date_raw = item['shipment_date'].split(sep='T')
-        date = dt.strptime(str_date_raw[0], '%Y-%m-%d').date()
-        item['shipment_date'] = date
+        item['shipment_date'] = str_date_raw[0]
     return report
 
 
@@ -47,8 +46,8 @@ def get_list_dates(report):
     dates = set()
     for item in report:
         dates.add(item['shipment_date'])
-    dates_list = list(dates).sort()
-    return dates_list
+
+    return sorted(list(dates))
 
 
 def get_sorted_report_by_date(report, dates_list):
@@ -56,6 +55,5 @@ def get_sorted_report_by_date(report, dates_list):
     for date in dates_list:
         for item in report:
             if date in item['shipment_date']:
-                item['shipment_date'] = dt.strftime(item['shipment_date'], '%Y-%m-%d')
                 sorted_report.append(item)
     return sorted_report

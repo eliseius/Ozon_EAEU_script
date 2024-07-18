@@ -1,5 +1,5 @@
-CURRENCY_API = 'ваш API ключ, полученный на сайте валют http://api.currencylayer.com/'
+URL_CURRENCY = "http://api.currencylayer.com/historical"
 
-STR_DATE_START = 'год-месяц-день'
+CURRENCY = 'USD'
 
-ADDRES_POSTGRESQL = 'указать формат'
+STR_DATE = '' # Формат даты 'год-месяц-дата'
