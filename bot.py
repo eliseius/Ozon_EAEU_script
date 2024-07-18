@@ -1,5 +1,3 @@
-import os
-
 from telegram.ext import CommandHandler, ConversationHandler, Filters, MessageHandler, Updater
 
 from handlers import has_incorrect_input, start_bot
@@ -7,9 +5,10 @@ from log import enter_for_log
 from anketa import (get_report_date_end, get_report_date_start, get_report_incorrect,
                     get_report_start)
 
+from config import OZON_BOT_API
 
 def main_bot():
-    ozon_bot = Updater(os.environ['OZON_BOT'], use_context = True)
+    ozon_bot = Updater(OZON_BOT_API, use_context = True)
     dp = ozon_bot.dispatcher
     report = ConversationHandler(
         entry_points = [MessageHandler(Filters.regex('^(Сформировать отчёт)$'), get_report_start)],

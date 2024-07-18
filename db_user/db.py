@@ -1,12 +1,11 @@
-import os
-
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
 
+from config import DB_POSTGRESQL
 
 
-engine = create_engine(os.environ['DB_POSTGRESQL']) # create_engine(settings.ADDRES_POSTGRESQL)
+engine = create_engine(DB_POSTGRESQL)
 db_session = scoped_session(sessionmaker(bind=engine))
 
 Base = declarative_base()

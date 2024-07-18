@@ -160,16 +160,8 @@ cython_debug/
 #.idea/
 
 
-test/
-
 # Other
-export.py
-ozon_settings.py
+.env
+*.txt
 
 # Test
-TEST/
-TEST.py
-
-test_currency.py
-
-setting.py
