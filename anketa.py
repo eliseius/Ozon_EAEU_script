@@ -1,7 +1,7 @@
 import constants
 import os
 
-from telegram import ReplyKeyboardRemove
+from telegram import ParseMode, ReplyKeyboardRemove
 from telegram.ext import ConversationHandler
 
 from sales_data import get_sales_data
@@ -10,9 +10,41 @@ from utils import compose_keyboard, output_error, output_report, parse_date
 
 def get_report_start(update, context):
     update.message.reply_text(
+        'Введите ваш <b>Client ID</b>\n'
+        'Идентификатор должен состоять только из цифр.\n'
+        'Пример идентификатора: 228976',
+        parse_mode = ParseMode.HTML,
+        reply_markup = ReplyKeyboardRemove(),
+    )
+    return 'client_id'
+
+
+def get_client_id(update, context):
+    client_id = update.message.text
+    if len(client_id) > 6:
+        context.user_data['report'] = {'client_id': client_id}
+    else:
+        update.message.reply_text(
+            'Введите корректный <b>Client ID</b>.'
+            'Идентификатор должен состоять только из цифр. Пример идентификатора: 228976',
+            parse_mode = ParseMode.HTML,
+            )
+        return 'client_id'
+    
+    update.message.reply_text(
+        'Введите ваш <b>Api Key</b>\n'
+        'Пример ключа: a608504t-61f0-4b81-bgh0-8022cladd876',
+        parse_mode = ParseMode.HTML,
+    )
+    return 'api_key'
+
+
+def get_api_key(update, context):
+    api_key = update.message.text
+    context.user_data['report']['api_key'] = api_key
+    update.message.reply_text(
         'Введите дату начала периода в формате\n'
         '"год.месяц.день"',
-        reply_markup = ReplyKeyboardRemove(),
     )
     return 'period_start'
 
@@ -22,7 +54,8 @@ def get_report_date_start(update, context):
     if date_start is None:
         update.message.reply_text('Введите корректную дату начала периода')
         return 'period_start'
-    context.user_data['report'] = {'period_start': date_start}
+    context.user_data['report']['period_start'] = date_start
+
     update.message.reply_text(
         'Введите дату конца периода в формате\n'
         '"год.месяц.день"'
@@ -40,15 +73,23 @@ def get_report_date_end(update, context):
         return 'period_end'
     context.user_data['report']['period_end'] = date_end
     update.message.reply_text('Отчёт формируется...')
+
+
+
+    print(context.user_data['report'])
     
+
     report_output, sum_post_in_city = get_sales_data(
+        client_id=context.user_data['report']['client_id'],
+        api_key=context.user_data['report']['api_key'],
         date_start=context.user_data['report']['period_start'],
         date_finish=context.user_data['report']['period_end'],
     )
     check_report(report_output, sum_post_in_city, update)
+
     update.message.reply_text(
-        'Вы можете сформировать новый отчёт',
-        reply_markup = compose_keyboard(),
+        'Вы можете сформировать новый отчет',
+        reply_markup = compose_keyboard('Ввести данные'),
     )
     return ConversationHandler.END
 

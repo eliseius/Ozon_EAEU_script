@@ -8,12 +8,12 @@ from raw_data_fbo import get_report_with_all_page_fbo
 from raw_data_fbs import get_report_with_all_page_fbs
 
 
-def get_sales_data(date_start, date_finish):
+def get_sales_data(client_id, api_key, date_start, date_finish):
     str_datetime_start = dt.strftime(date_start, '%Y-%m-%dT%H:%M:%S.%fZ')
     str_datetime_finish = dt.strftime(date_finish, '%Y-%m-%dT%H:%M:%S.%fZ')
 
-    report_fbs = get_report_with_all_page_fbs(str_datetime_start, str_datetime_finish, OFFSET)
-    report_fbo = get_report_with_all_page_fbo(str_datetime_start, str_datetime_finish, OFFSET)
+    report_fbs = get_report_with_all_page_fbs(client_id, api_key, str_datetime_start, str_datetime_finish, OFFSET)
+    report_fbo = get_report_with_all_page_fbo(client_id, api_key, str_datetime_start, str_datetime_finish, OFFSET)
     report_raw = report_fbs + report_fbo
     if report_raw:
         finall_report, sum_posts_in_country = get_report_on_shipments_to_countries(report_raw)
