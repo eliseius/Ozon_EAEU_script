@@ -6,10 +6,10 @@ from constants import LIMIT, URL_OZON_FBO
 from utils import save_error_ozon
 
 
-def get_report_with_all_page_fbo(str_datetime_start, str_datetime_finish, offset):
+def get_report_with_all_page_fbo(client_id, api_key, str_datetime_start, str_datetime_finish, offset):
     report_pagination = []
     while True:
-        sales_report = get_raw_sales_data_fbo(str_datetime_start, str_datetime_finish, offset)
+        sales_report = get_raw_sales_data_fbo(client_id, api_key, str_datetime_start, str_datetime_finish, offset)
         if sales_report is not None:
             short_report = make_short_report_fbo(sales_report)
             report_pagination.extend(short_report)
@@ -42,8 +42,9 @@ def make_short_report_fbo(sales_report):
     return short_report
 
 
-def get_raw_sales_data_fbo(datetime_start, datetime_finish, offset):
-    headers = {'Client-Id': OZON_CLIENT_ID, 'Api-Key': OZON_API, 'Content-Type': 'application/json'}
+def get_raw_sales_data_fbo(client_id, api_key, datetime_start, datetime_finish, offset):
+    #headers = {'Client-Id': OZON_CLIENT_ID, 'Api-Key': OZON_API, 'Content-Type': 'application/json'}
+    headers = {'Client-Id': client_id, 'Api-Key': api_key, 'Content-Type': 'application/json'}
 
     params = {
         'dir': 'asc',

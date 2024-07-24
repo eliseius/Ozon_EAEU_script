@@ -7,8 +7,9 @@ from telegram import ParseMode, ReplyKeyboardMarkup
 from log import enter_for_log
 
 
-def compose_keyboard():
-    return ReplyKeyboardMarkup([['Сформировать отчёт',]])
+def compose_keyboard(message):
+    return ReplyKeyboardMarkup([[message]])
+
 
 
 def parse_date(input_date):
